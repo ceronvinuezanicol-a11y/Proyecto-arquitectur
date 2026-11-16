@@ -1,6 +1,8 @@
+
 import java.util.Scanner;
 
 public class Fase1 {
+
     public static final String RESET = "\u001B[0m";
     public static final String VERDE = "\u001B[32m";
     public static final String ROJO = "\u001B[31m";
@@ -8,51 +10,162 @@ public class Fase1 {
     public static final String CYAN = "\u001B[36m";
 
     public static void ejecutar(Scanner sc) {
-        System.out.println(PURPURA + "\n--- FASE 1: CONVERSIÓN DE DECIMAL A OTRAS BASES  ---" + RESET);
-        System.out.print("Ingrese un número entero decimal positivo: ");
-        int num = sc.nextInt();
 
-        if (num < 0) {
-            System.out.println(ROJO + "Error: El número debe ser mayor o igual a cero." + RESET);
-        } else if (num == 0) {
-            System.out.println(VERDE + " [Binario]:     0");
-            System.out.println(" [Octal]:       0");
-            System.out.println(" [Hexadecimal]: 0" + RESET);
-        } else {
-            // divisiones sucesivas
-            String binario = convertirPorDivisiones(num, 2);
-            String octal = convertirPorDivisiones(num, 8);
-            String hexadecimal = convertirPorDivisiones(num, 16);
+        int opcion = 0;
 
-            System.out.println(VERDE + " [Binario]:     " + binario);
-            System.out.println(" [Octal]:       " + octal);
-            System.out.println(" [Hexadecimal]: " + hexadecimal + RESET);
-        }
-        pausaLocal(sc);
-    }
+        do {
 
-    // divisiones sucesivas y residuos
-    public static String convertirPorDivisiones(int num, int base) {
-        StringBuilder resultado = new StringBuilder();
-        int temp = num;
+            System.out.println(CYAN + "\n========== FASE 1 ==========" + RESET);
+            System.out.println(PURPURA + "1. Decimal a Binario" + RESET);
+            System.out.println(PURPURA + "2. Decimal a Octal" + RESET);
+            System.out.println(PURPURA + "3. Decimal a Hexadecimal" + RESET);
+            System.out.println(PURPURA + "4. Convertir a todas las bases" + RESET);
+            System.out.println(PURPURA + "5. Regresar al menu principal" + RESET);
+            System.out.print(CYAN + "Seleccione una opcion: " + RESET);
 
-        while (temp > 0) {
-            int residuo = temp % base;
-            if (residuo < 10) {
-                resultado.insert(0, residuo); // Inserta el residuo al inicio
-            } else {
-                // Mapeo para los valores hexadecimales (A=10, B=11, C=12, D=13, E=14, F=15)
-                char letraHex = (char) ('A' + (residuo - 10));
-                resultado.insert(0, letraHex);
+            opcion = sc.nextInt();
+
+            switch (opcion) {
+
+                case 1: {
+                    int numero;
+
+                    System.out.print("Ingrese un numero positivo: ");
+                    numero = sc.nextInt();
+
+                    if (numero < 0) {
+                        System.out.println(ROJO + "Error. Ingrese un numero positivo." + RESET);
+                    } else {
+                        int binario = DecimalaBinario(numero);
+
+                        System.out.println(VERDE + "El numero decimal " + numero +
+                                " en binario es " + binario + RESET);
+                    }
+                    break;
+                }
+
+                case 2: {
+                    int numero;
+
+                    System.out.print("Ingrese un numero entero decimal positivo: ");
+                    numero = sc.nextInt();
+
+                    if (numero < 0) {
+                        System.out.println(ROJO + "Error. Ingrese un numero positivo." + RESET);
+                    } else {
+                        int octal = DecimalaOctal(numero);
+
+                        System.out.println(VERDE + "El numero decimal " + numero +
+                                " en octal es " + octal + RESET);
+                    }
+                    break;
+                }
+
+                case 3: {
+                    int numero;
+
+                    System.out.print("Ingrese un numero entero decimal positivo: ");
+                    numero = sc.nextInt();
+
+                    if (numero < 0) {
+                        System.out.println(ROJO + "Error. Ingrese un numero positivo." + RESET);
+                    } else {
+                        String hexadecimal = DecimalaHexadecimal(numero);
+
+                        System.out.println(VERDE + "El numero decimal " + numero +
+                                " en hexadecimal es " + hexadecimal + RESET);
+                    }
+                    break;
+                }
+
+                case 4: {
+                    int numero;
+
+                    System.out.print("Ingrese un numero entero decimal positivo: ");
+                    numero = sc.nextInt();
+
+                    if (numero < 0) {
+                        System.out.println(ROJO + "Error. Ingrese un numero positivo." + RESET);
+                    } else {
+                        System.out.println(VERDE + "Binario: " + DecimalaBinario(numero) + RESET);
+                        System.out.println(VERDE + "Octal: " + DecimalaOctal(numero) + RESET);
+                        System.out.println(VERDE + "Hexadecimal: " + DecimalaHexadecimal(numero) + RESET);
+                    }
+                    break;
+                }
+
+                case 5:
+                    System.out.println(CYAN + "Regresando al menu principal..." + RESET);
+                    break;
+
+                default:
+                    System.out.println(ROJO + "Opcion no valida." + RESET);
+                    break;
             }
-            temp = temp / base; // Cociente para la siguiente división
-        }
-        return resultado.toString();
+
+        } while (opcion != 5);
     }
 
-    public static void pausaLocal(Scanner sc) {
-        System.out.print(CYAN + "\nPresione Enter para continuar..." + RESET);
-        sc.nextLine();
-        sc.nextLine();
+    // Convierte un numero decimal a binario mediante divisiones para 2
+    public static int DecimalaBinario(int num) {
+
+        int binario = 0;
+        int multiplicador = 1;
+        int residuo;
+
+        while (num > 0) {
+            residuo = num % 2;
+            binario = binario + residuo * multiplicador;
+
+            multiplicador = multiplicador * 10;
+
+            num = num / 2;
+        }
+
+        return binario;
+    }
+
+    // Convierte un numero decimal a octal mediante divisiones para 8
+    public static int DecimalaOctal(int num) {
+
+        int octal = 0;
+        int multiplicador = 1;
+        int residuo;
+
+        while (num > 0) {
+            residuo = num % 8;
+            octal = octal + residuo * multiplicador;
+
+            multiplicador = multiplicador * 10;
+
+            num = num / 8;
+        }
+
+        return octal;
+    }
+
+    // Convierte un numero decimal a hexadecimal mediante divisiones para 16
+    public static String DecimalaHexadecimal(int num) {
+
+        int residuo;
+        String hexadecimal = "";
+
+        if (num == 0) {
+            return "0";
+        }
+
+        while (num > 0) {
+            residuo = num % 16;
+
+            if (residuo < 10) {
+                hexadecimal = residuo + hexadecimal;
+            } else {
+                hexadecimal = (char) (residuo + 55) + hexadecimal;
+            }
+
+            num = num / 16;
+        }
+
+        return hexadecimal;
     }
 }
